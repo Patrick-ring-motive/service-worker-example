@@ -1,5 +1,10 @@
+function sleep(ms){
+        return new Promise(resolve => setTimeout(resolve,ms));
+}
 function awaitUntil(event,promise){
-        event.waitUntil(promise);
+        event.waitUntil((async()=>{
+               await promise
+        })());
         return promise;
 }
 //register service worker to the current script
@@ -146,15 +151,12 @@ const loosest = {
             }
           }
           /* Don't turn off Service Worker until this is done */
-          const rep = awaitUntil(event,offFirstFetch(request))
-          const response = await rep;
+          const response = await awaitUntil(event,offFirstFetch(request))
           if(response && (response instanceof Response)){
             event.respondWith(response.clone());
           }else{
             console.log(response);
           }
-          event.waitUntil(rep);
-          await rep;
           return;
         }
         /* HTML files */
@@ -175,15 +177,12 @@ const loosest = {
             }
           }
           /* Don't turn off Service Worker until this is done */
-          const rep = awaitUntil(event,offFirstFetch(request))
-          const response = await rep;
+          const response = await awaitUntil(event,offFirstFetch(request))
           if(response && (response instanceof Response)){
             event.respondWith(response.clone());
           }else{
             console.log(response);
           }
-          event.waitUntil(rep);
-          await rep;
           return;
         }
       })();
