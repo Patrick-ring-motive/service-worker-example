@@ -122,6 +122,7 @@ const loosest = {
   /* Listen for request events */
   self.addEventListener('fetch', (event) => {
     try {
+      event.waitUntil();
       const FetchEvent = (async()=>{
         /* Get the request */
         let request = event.request;
@@ -189,7 +190,7 @@ const loosest = {
         }
       })();
       /* Don't turn off Service Worker until everything is done */
-        event.waitUntil(FetchEvent);
+        event.waitUntil(awaitUntil(event,FetchEvent));
     } catch (e) {
       console.log(e);
       return;
