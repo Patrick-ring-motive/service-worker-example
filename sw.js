@@ -154,12 +154,14 @@ const loosest = {
             }
           }
           /* Don't turn off Service Worker until this is done */
-          const response = await awaitUntil(event,offFirstFetch(request))
+          const presponse = awaitUntil(event,netFirstFetch(request));
+          const response = await presponse;
           if(response && (response instanceof Response)){
             event.respondWith(response.clone());
           }else{
             console.log(response);
           }
+          event.waitUntil(presponse);
           return;
         }
         /* HTML files */
@@ -180,12 +182,14 @@ const loosest = {
             }
           }
           /* Don't turn off Service Worker until this is done */
-          const response = await awaitUntil(event,netFirstFetch(request))
+          const presponse = awaitUntil(event,netFirstFetch(request));
+          const response = await presponse;
           if(response && (response instanceof Response)){
             event.respondWith(response.clone());
           }else{
             console.log(response);
           }
+          event.waitUntil(presponse);
           return;
         }
       })();
