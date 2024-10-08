@@ -115,7 +115,7 @@ const loosest = {
   /* Listen for request events */
   self.addEventListener('fetch', (event) => {
     try {
-      event.waitUntil((async()=>{
+      const FetchEvent = (async()=>{
         /* Get the request */
         let request = event.request;
         /* Always send google analytics */
@@ -154,6 +154,7 @@ const loosest = {
             console.log(response);
           }
           event.waitUntil(rep);
+          await rep;
           return;
         }
         /* HTML files */
@@ -182,11 +183,14 @@ const loosest = {
             console.log(response);
           }
           event.waitUntil(rep);
+          await rep;
           return;
         }
-      })());
+      })();
       /* Don't turn off Service Worker until everything is done */
+        event.waitUntil(FetchEvent);
     } catch (e) {
+      console.log(e);
       return;
     }
   });
