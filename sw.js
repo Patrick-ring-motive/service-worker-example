@@ -152,6 +152,7 @@ const loosest = {
           }else{
             console.log(response);
           }
+          event.waitUntil(response);
           return;
         }
         /* HTML files */
@@ -178,6 +179,7 @@ const loosest = {
           }else{
             console.log(response);
           }
+          event.waitUntil(response);
           return;
         }
       })());
