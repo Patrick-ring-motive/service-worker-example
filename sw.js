@@ -146,13 +146,14 @@ const loosest = {
             }
           }
           /* Don't turn off Service Worker until this is done */
-          const response = await awaitUntil(event,offFirstFetch(request));
+          const rep = awaitUntil(event,offFirstFetch(request))
+          const response = await rep;
           if(response && (response instanceof Response)){
             event.respondWith(response.clone());
           }else{
             console.log(response);
           }
-          event.waitUntil(response);
+          event.waitUntil(rep);
           return;
         }
         /* HTML files */
@@ -173,13 +174,14 @@ const loosest = {
             }
           }
           /* Don't turn off Service Worker until this is done */
-          const response = await awaitUntil(event,netFirstFetch(request));
+          const rep = awaitUntil(event,offFirstFetch(request))
+          const response = await rep;
           if(response && (response instanceof Response)){
             event.respondWith(response.clone());
           }else{
             console.log(response);
           }
-          event.waitUntil(response);
+          event.waitUntil(rep);
           return;
         }
       })());
