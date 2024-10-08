@@ -122,7 +122,7 @@ const loosest = {
   /* Listen for request events */
   self.addEventListener('fetch', (event) => {
     try {
-      event.waitUntil();
+      event.waitUntil((async()=>{})());
       const FetchEvent = (async()=>{
         /* Get the request */
         let request = event.request;
