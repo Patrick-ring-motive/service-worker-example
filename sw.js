@@ -3,7 +3,9 @@ function sleep(ms){
 }
 function awaitUntil(event,promise){
         event.waitUntil((async()=>{
+               await sleep(1); 
                await promise
+               await sleep(1);
         })());
         return promise;
 }
