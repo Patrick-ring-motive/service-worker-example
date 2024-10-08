@@ -177,7 +177,7 @@ const loosest = {
             }
           }
           /* Don't turn off Service Worker until this is done */
-          const response = await awaitUntil(event,offFirstFetch(request))
+          const response = await awaitUntil(event,netFirstFetch(request))
           if(response && (response instanceof Response)){
             event.respondWith(response.clone());
           }else{
