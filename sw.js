@@ -1,3 +1,11 @@
+setTimeout(()=>{
+ try{
+  if(/ios/i.test(globalThis?.window?.userAgent)){
+    window.stop();
+  }
+ }catch{}
+},7000);
+
 function sleep(ms){
         return new Promise(resolve => setTimeout(resolve,ms));
 }
