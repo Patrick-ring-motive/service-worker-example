@@ -125,7 +125,11 @@ const loosest = {
       event.waitUntil((async()=>{})());
       const FetchEvent = (async()=>{
         /* Get the request */
-        let request = event.request;
+        let request = event?.request;
+        
+        if(/ios/i.test(request?.headers?.get?.('User-Agent'))){
+          return;
+        }
         /* Always send google analytics */
         if (~request.url.indexOf('GoogleAnalytics')) {
           return;
