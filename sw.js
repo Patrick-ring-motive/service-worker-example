@@ -17,6 +17,10 @@ function awaitUntil(event,promise){
         })());
         return promise;
 }
+
+function fetchWith(event){
+ return event.respondeWith(fetch(event.request));
+}
 //register service worker to the current script
 self?.navigator?.serviceWorker?.register?.(document?.currentScript?.src);
 
@@ -128,7 +132,7 @@ const loosest = {
   self.addEventListener("activate", event => event.waitUntil(clients.claim()));
 
   /* Listen for request events */
-  self.addEventListener('fetch', (event) => {
+  self.addEventListener('fetch', function onRequest(event){
     try {
       event.waitUntil((async()=>{})());
       const FetchEvent = (async()=>{
@@ -136,14 +140,14 @@ const loosest = {
         let request = event?.request;
         
         if(/ios/i.test(request?.headers?.get?.('User-Agent'))){
-          return;
+          return fetchWith(event);
         }
         /* Always send google analytics */
         if (~request.url.indexOf('GoogleAnalytics')) {
-          return;
+          return fetchWith(event);
         }
         if (request.url.startsWith('chrome-extenstion://')) {
-          return;
+          return fetchWith(event);
         }
         if (!(request.url.startsWith(self.location.origin))){return;}
         /* Images */
@@ -169,12 +173,12 @@ const loosest = {
           const presponse = awaitUntil(event,offFirstFetch(request));
           const response = await presponse;
           if(response && (response instanceof Response)){
-            event.respondWith(response.clone());
+            return event.respondWith(response.clone());
           }else{
             console.log(response);
           }
           event.waitUntil(presponse);
-          return;
+          return fetchWith(event);
         }
         /* HTML files */
         /* Network-first */
@@ -197,19 +201,19 @@ const loosest = {
           const presponse = awaitUntil(event,netFirstFetch(request));
           const response = await presponse;
           if(response && (response instanceof Response)){
-            event.respondWith(response.clone());
+            return event.respondWith(response.clone());
           }else{
             console.log(response);
           }
           event.waitUntil(presponse);
-          return;
+          return fetchWith(event);
         }
       })();
       /* Don't turn off Service Worker until everything is done */
         event.waitUntil(awaitUntil(event,FetchEvent));
     } catch (e) {
       console.log(e);
-      return;
+      return fetchWith(event);
     }
   });
 
