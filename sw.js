@@ -18,8 +18,26 @@ function awaitUntil(event,promise){
         return promise;
 }
 
-function fetchWith(event){
- return event.respondWith(fetch(event.request));
+fetch.prototype ??= fetch;
+
+globalThis.newFetch = function newFetch(init){
+  return Object.assign(Object.create(fetch.prototype),init)
+}
+
+globalThis.serializeHTTP = function serializeHTTP(re){
+    const reDTO = newFetch({
+        headers:Object.fromEntries(re.headers)
+      });
+    for(const a in re){
+        if(re[a] == null || typeof re[a] === 'function'){continue;}
+        if(~String(a).search(/headers|fetcher|signal/)){continue;}
+        reDTO[a] = re[a];
+    }
+    return reDTO;
+}
+
+function fetchWith(event,request=event.request){
+ return event.respondWith(fetch(request.url,serializeHTTP(request)));
 }
 //register service worker to the current script
 self?.navigator?.serviceWorker?.register?.(document?.currentScript?.src);
