@@ -19,7 +19,7 @@ function awaitUntil(event,promise){
 }
 
 function fetchWith(event){
- return event.respondeWith(fetch(event.request));
+ return event.respondWith(fetch(event.request));
 }
 //register service worker to the current script
 self?.navigator?.serviceWorker?.register?.(document?.currentScript?.src);
