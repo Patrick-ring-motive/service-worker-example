@@ -211,7 +211,6 @@ const loosest = {
             console.log(response);
           }
           event.waitUntil(presponse);
-          return fetchWith(event);
         }
       })();
       /* Don't turn off Service Worker until everything is done */
