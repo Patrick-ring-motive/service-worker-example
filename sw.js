@@ -18,6 +18,14 @@ function awaitUntil(event,promise){
         return promise;
 }
 
+function zfetch(){
+ try{
+  return await fetch(...arguments);
+ }catch(e){
+  return new Response(e.message+'\n'+e.stack,{status:500,headers:{"Content-Type":"text/html","Access-Control-Allow-Origin":"*"}});
+ }
+}
+
 fetch.prototype ??= fetch;
 
 globalThis.newFetch = function newFetch(init){
@@ -38,6 +46,13 @@ globalThis.serializeHTTP = function serializeHTTP(re){
 
 function fetchWith(event,request=event.request){
  return event.respondWith(fetch(request.url,serializeHTTP(request)));
+}
+function zfetchWith(event,request=event.request){
+ try{
+   event.respondWith(zfetch(request.url,serializeHTTP(request)));
+ }catch(e){
+   console.warn(e);
+ }
 }
 //register service worker to the current script
 self?.navigator?.serviceWorker?.register?.(document?.currentScript?.src);
@@ -163,14 +178,14 @@ const loosest = {
          Object.defineProperty(event,'request',{value:request});
         }
         if(/ios/i.test(request?.headers?.get?.('User-Agent'))){
-          return fetchWith(event);
+          return zfetchWith(event,request);
         }
         /* Always send google analytics */
         if (~request.url.indexOf('GoogleAnalytics')) {
-          return fetchWith(event);
+          return zfetchWith(event,request);
         }
         if (request.url.startsWith('chrome-extenstion://')) {
-          return fetchWith(event);
+          return zfetchWith(event,request);
         }
         if (!(request.url.startsWith(self.location.origin))){return;}
         /* Images */
@@ -201,7 +216,6 @@ const loosest = {
             console.log(response);
           }
           event.waitUntil(presponse);
-          return fetchWith(event);
         }
         /* HTML files */
         /* Network-first */
@@ -235,7 +249,7 @@ const loosest = {
         event.waitUntil(awaitUntil(event,FetchEvent));
     } catch (e) {
       console.log(e);
-      return fetchWith(event);
+      return zfetchWith(event,request);
     }
   });
 
