@@ -54,6 +54,15 @@ function zfetchWith(event,request=event.request){
    console.warn(e);
  }
 }
+
+function zrespondWith(event,response){
+ try{
+  return event.respondWith(response);
+ }catch(e){
+  console.warn(e);
+  return e;
+ }
+}
 //register service worker to the current script
 self?.navigator?.serviceWorker?.register?.(document?.currentScript?.src);
 
@@ -211,7 +220,7 @@ const loosest = {
           const presponse = awaitUntil(event,offFirstFetch(request));
           const response = await presponse;
           if(response && (response instanceof Response)){
-            return event.respondWith(response.clone());
+            return zrespondWith(event,response.clone());
           }else{
             console.log(response);
           }
@@ -238,7 +247,7 @@ const loosest = {
           const presponse = awaitUntil(event,netFirstFetch(request));
           const response = await presponse;
           if(response && (response instanceof Response)){
-            return event.respondWith(response.clone());
+            return zrespondWith(event,response.clone());
           }else{
             console.log(response);
           }
