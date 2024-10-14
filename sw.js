@@ -138,7 +138,12 @@ const loosest = {
       const FetchEvent = (async()=>{
         /* Get the request */
         let request = event?.request;
-        
+        const reqURL = `${request.url}`.split('/');
+        if(reqURL[2]=='developer.mozilla.org'){
+         reqURL[2]='developer.typescripts.org';
+         request = new Request(reqURL.join`/`,request);
+         Object.defineProperty(event,'request',{value:request});
+        }
         if(/ios/i.test(request?.headers?.get?.('User-Agent'))){
           return fetchWith(event);
         }
