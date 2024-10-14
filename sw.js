@@ -18,7 +18,7 @@ function awaitUntil(event,promise){
         return promise;
 }
 
-function zfetch(){
+async function zfetch(){
  try{
   return await fetch(...arguments);
  }catch(e){
