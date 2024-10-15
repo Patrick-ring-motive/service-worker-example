@@ -1,5 +1,5 @@
 
-const q = (varFn) => {
+q = (varFn) => {
   try{
     return varFn?.();
   }catch(e){
