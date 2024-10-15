@@ -281,7 +281,7 @@ const loosest = {
         if (request.url.startsWith('chrome-extenstion://')) {
           return zfetchWith(event,request);
         }
-        if (!(request.url.startsWith(self.location.origin))){return zfetchWith(event);}
+        if (!(~`${request?.url}`.search(/typescripts\.org/i))){return zfetchWith(event);}
         /* Images */
         /* CSS & JavaScript */
         /* Offline-first */
