@@ -255,8 +255,10 @@ const loosest = {
         }
 
         try{
+          const clientURL = `${(await getClientURL(event))}`;
+          console.log(clientURL);
           if((`${request.headers.get('referer')}`.includes('path=')&&!request.url.includes('path='))
-           ||(`${(await getClientURL(event))}`.includes('path=')&&!request.url.includes('path='))){
+           ||(clientURL.includes('path=')&&!request.url.includes('path='))){
             const incomingURL = znewURL(request?.url);
             const path = incomingURL?.searchParams?.get?.('path');
             if(!path){
@@ -279,7 +281,7 @@ const loosest = {
         if (request.url.startsWith('chrome-extenstion://')) {
           return zfetchWith(event,request);
         }
-        if (!(request.url.startsWith(self.location.origin))){return;}
+        if (!(request.url.startsWith(self.location.origin))){return zfetchWith(event);}
         /* Images */
         /* CSS & JavaScript */
         /* Offline-first */
