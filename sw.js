@@ -54,7 +54,7 @@ async function exceptFn(request,response){
    if(response?.status == 403){
      const text = await $Q(async()=>(await response.text()));
      if(/usaa/i.test(text)){
-       response = new Response(text,response);
+       response = new Response(text,{status:243,statusText:"Forbidden?"});
        globalThis.cache ??= (await caches.open('app'));
        await cache.put(request,response);
      }
