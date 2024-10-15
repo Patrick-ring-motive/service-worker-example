@@ -20,7 +20,9 @@ function awaitUntil(event,promise){
 
 async function zfetch(){
  try{
-  return await fetch(...arguments);
+  let response = await fetch(...arguments);
+  /*<insert response exceptions>*/
+  return response;
  }catch(e){
   return new Response(e.message+'\n'+e.stack,{status:500,headers:{"Content-Type":"text/html","Access-Control-Allow-Origin":"*"}});
  }
@@ -181,7 +183,7 @@ const loosest = {
         /* Get the request */
         let request = event?.request;
 
-        /*<insert exceptions>*/
+        /*<insert request exceptions>*/
        
         const reqURL = `${request.url}`.split('/');
         if(reqURL[2]=='developer.mozilla.org'){
