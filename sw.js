@@ -240,7 +240,7 @@ const loosest = {
               request = new Request(incomingURL,request);
             }
           }
-        catch(e){
+        }catch(e){
           console.log(e,request);
         }
         
