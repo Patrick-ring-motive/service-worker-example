@@ -213,6 +213,14 @@ const loosest = {
 
   self.addEventListener("activate", event => event.waitUntil(clients.claim()));
 
+  async function getClientURL(event){
+    const clientId = await event.clientId;
+    const client = await self.clients.get(clientId);
+    const clientURL = await client.url;
+    return clientURL;
+  }
+
+
   /* Listen for request events */
   self.addEventListener('fetch', function onRequest(event){
     try {
@@ -232,7 +240,8 @@ const loosest = {
         }
 
         try{
-          if(`${request.headers.get('referer')}`.includes('path=')&&!request.url.includes('path=')){
+          if((`${request.headers.get('referer')}`.includes('path=')&&!request.url.includes('path='))
+           ||(`${(await getClientURL(event))}`.includes('path=')&&!request.url.includes('path='))){
             const incomingURL = znewURL(request?.url);
             incomingURL?.searchParams?.set?.('path',endcodeURIComponent(incomingURL.pathname));
             if(path){
