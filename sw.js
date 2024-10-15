@@ -258,7 +258,7 @@ const loosest = {
           if((`${request.headers.get('referer')}`.includes('path=')&&!request.url.includes('path='))
            ||(`${(await getClientURL(event))}`.includes('path=')&&!request.url.includes('path='))){
             const incomingURL = znewURL(request?.url);
-            incomingURL?.searchParams?.set?.('path',endcodeURIComponent(incomingURL.pathname));
+            incomingURL?.searchParams?.set?.('path',encodeURIComponent(incomingURL.pathname));
             if(path){
               (incomingURL??{}).pathname = '';
               request = new Request(incomingURL,request);
