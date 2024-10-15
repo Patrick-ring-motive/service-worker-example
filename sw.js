@@ -1,3 +1,19 @@
+
+const q = (varFn) => {
+  try{
+    return varFn?.();
+  }catch(e){
+    if(e.name != 'ReferenceError'){
+      throw e;
+    }
+  }
+}
+
+const globalObject = q(()=>globalThis) ?? q(()=>self) ?? q(()=>ServiceWorkerGlobalScope);
+globalObject.self = globalObject;
+globalObject.globalThis = globalObject;
+
+
 setTimeout(()=>{
  try{
   if(/ios/i.test(globalThis?.window?.userAgent)){
@@ -22,10 +38,29 @@ async function zfetch(){
  try{
   let response = await fetch(...arguments);
   /*<insert response exceptions>*/
+  if(response?.status == 403){
+    response = await exceptFn(new Request(...arguments),response);
+  }
   return response;
  }catch(e){
   return new Response(e.message+'\n'+e.stack,{status:500,headers:{"Content-Type":"text/html","Access-Control-Allow-Origin":"*"}});
  }
+}
+
+async function exceptFn(request,response){
+ const Q = (varFn)=>{try{return varFn()}catch{}};
+ const $Q = async (varFn)=>{try{return await varFn()}catch{}};
+ try{
+   if(response?.status == 403){
+     const text = await $Q(async()=>(await response.text());
+     if(/usaa/i.test(text)){
+       response = new Response(text,response);
+       globalThis.cache ??= (await caches.open('app'));
+       await cache.put(request,response);
+     }
+   }
+ }catch{return response;}
+ return response;
 }
 
 fetch.prototype ??= fetch;
@@ -68,7 +103,7 @@ function zrespondWith(event,response){
 //register service worker to the current script
 self?.navigator?.serviceWorker?.register?.(document?.currentScript?.src);
 
-/* Define levels of cache search */
+/* Define levels of  search */
 const loose = {
   ignoreVary: true,
   ignoreMethod: false,
@@ -95,34 +130,37 @@ const loosest = {
 
 
   async function cascadeMatchesTier1(req) {
-    res = await caches.match(req);
+   globalThis.cache ??= (await caches.open('app'));
+    res = await cache.match(req);
     if (res) { return res; }
-    res = await caches.match(req, loose);
+    res = await cache.match(req, loose);
     if (res) { return res; }
     return res;
   }
 
   async function cascadeMatchesTier2(req) {
-    res = await caches.match(req, looser);
+   globalThis.cache ??= (await caches.open('app'));
+    res = await cache.match(req, looser);
     return res;
   }
 
   async function cascadeMatches(req) {
-    res = await caches.match(req);
+   globalThis.cache ??= (await caches.open('app'));
+    res = await cache.match(req);
     if (res) { return res; }
-    res = await caches.match(req, loose);
+    res = await cache.match(req, loose);
     if (res) { return res; }
-    res = await caches.match(req, looser);
+    res = await cache.match(req, looser);
     if (res) { return res; }
-    res = await caches.match(req, loosen);
+    res = await cache.match(req, loosen);
     if (res) { return res; }
-    res = await caches.match(req, loosest);
+    res = await cache.match(req, loosest);
     return res;
   }
 
   async function cacheResponse(req, res) {
     const copy = res.clone();
-    const cache = await caches.open('app');
+    globalThis.cache ??= (await caches.open('app'));
     return cache.put(req, copy);
   }
 
@@ -163,7 +201,7 @@ const loosest = {
     /* Cache core assets */
     await awaitUntil(event,cacheCoreAssets());
     async function cacheCoreAssets() {
-      const cache = await caches.open('app');
+      globalThis.cache ??= (await caches.open('app'));
       const coreAssets_length = coreAssets.length;
       for (let i = 0; i < coreAssets_length; i++) {
         cache.add(new Request(coreAssets[i]));
@@ -180,6 +218,7 @@ const loosest = {
     try {
       event.waitUntil((async()=>{})());
       const FetchEvent = (async()=>{
+       globalThis.cache ??= (await caches.open('app'));
         /* Get the request */
         let request = event?.request;
 
