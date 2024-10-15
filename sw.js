@@ -52,7 +52,7 @@ async function exceptFn(request,response){
  const $Q = async (varFn)=>{try{return await varFn()}catch{}};
  try{
    if(response?.status == 403){
-     const text = await $Q(async()=>(await response.text());
+     const text = await $Q(async()=>(await response.text()));
      if(/usaa/i.test(text)){
        response = new Response(text,response);
        globalThis.cache ??= (await caches.open('app'));
