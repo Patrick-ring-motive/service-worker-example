@@ -180,6 +180,9 @@ const loosest = {
       const FetchEvent = (async()=>{
         /* Get the request */
         let request = event?.request;
+
+        /*<insert exceptions>*/
+       
         const reqURL = `${request.url}`.split('/');
         if(reqURL[2]=='developer.mozilla.org'){
          reqURL[2]='developer.typescripts.org';
