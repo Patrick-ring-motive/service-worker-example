@@ -88,7 +88,7 @@ function zfetchWith(event,request=event.request){
  try{
    event.respondWith(zfetch(request.url,serializeHTTP(request)));
  }catch(e){
-   console.warn(e);
+   console.warn(e,event,request);
  }
 }
 
@@ -96,7 +96,7 @@ function zrespondWith(event,response){
  try{
   return event.respondWith(response);
  }catch(e){
-  console.warn(e);
+  console.warn(e,event,response);
   return e;
  }
 }
@@ -301,8 +301,8 @@ const loosest = {
       /* Don't turn off Service Worker until everything is done */
         event.waitUntil(awaitUntil(event,FetchEvent));
     } catch (e) {
-      console.log(e);
-      return zfetchWith(event,request);
+      console.log(e,event);
+      return zfetchWith(event);
     }
   });
 
