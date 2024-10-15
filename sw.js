@@ -221,7 +221,7 @@ const loosest = {
        globalThis.cache ??= (await caches.open('app'));
         /* Get the request */
         let request = event?.request;
-
+        
         /*<insert request exceptions>*/
        
         const reqURL = `${request.url}`.split('/');
@@ -230,6 +230,20 @@ const loosest = {
          request = new Request(reqURL.join`/`,request);
          Object.defineProperty(event,'request',{value:request});
         }
+
+        try{
+          if(`${request.headers.get('referer')}`.includes('path=')&&!request.url.includes('path=')){
+            const incomingURL = znewURL(request?.url);
+            incomingURL?.searchParams?.set?.('path',endcodeURIComponent(incomingURL.pathname));
+            if(path){
+              (incomingURL??{}).pathname = '';
+              request = new Request(incomingURL,request);
+            }
+          }
+        catch(e){
+          console.log(e,request);
+        }
+        
         if(/ios/i.test(request?.headers?.get?.('User-Agent'))){
           return zfetchWith(event,request);
         }
