@@ -13,6 +13,21 @@ const globalObject = q(()=>globalThis) ?? q(()=>self) ?? q(()=>ServiceWorkerGlob
 globalObject.self = globalObject;
 globalObject.globalThis = globalObject;
 
+  globalThis.znewURL = function znewURL(){
+    try{
+        return new URL(...arguments);
+    }catch(e){
+        try{
+            return new URL(arguments[0]);
+        }catch{
+            try{
+                return new URL(`https://${arguments[0]}`);
+            }catch{
+                return new URL(`${e.name}://`);
+            }
+        }
+    }
+  }
 
 setTimeout(()=>{
  try{
