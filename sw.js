@@ -235,6 +235,10 @@ const loosest = {
     return clientURL;
   }
 
+  async function zgetClientURL(event){
+    return znewURL(await getClientURL(event));
+  }
+
 
   /* Listen for request events */
   self.addEventListener('fetch', function onRequest(event){
@@ -255,7 +259,7 @@ const loosest = {
         }
 
         try{
-          const clientURL = `${(await getClientURL(event))}`;
+          const clientURL = `${(await zgetClientURL(event))}`;
           console.log(clientURL);
           if((`${request.headers.get('referer')}`.includes('path=')&&!request.url.includes('path='))
            ||(clientURL.includes('path=')&&!request.url.includes('path='))){
