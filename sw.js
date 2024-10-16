@@ -229,9 +229,9 @@ const loosest = {
   self.addEventListener("activate", event => event.waitUntil(clients.claim()));
 
   async function getClientURL(event){
-    const clientId = await event.clientId;
-    const client = await self.clients.get(clientId);
-    const clientURL = await client.url;
+    const clientId = await event?.clientId;
+    const client = await self?.clients?.get?.(clientId);
+    const clientURL = await client?.url;
     return clientURL;
   }
 
