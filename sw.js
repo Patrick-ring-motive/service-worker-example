@@ -17,6 +17,7 @@ globalObject.globalThis = globalObject;
     try{
         return new URL(...arguments);
     }catch(e){
+        console.log(e,...arguments);
         try{
             return new URL(arguments[0]);
         }catch{
@@ -58,7 +59,8 @@ async function zfetch(){
   }
   return response;
  }catch(e){
-  return new Response(e.message+'\n'+e.stack,{status:500,headers:{"Content-Type":"text/html","Access-Control-Allow-Origin":"*"}});
+   console.log(e,...arguments);
+   return new Response(e.message+'\n'+e.stack,{status:500,headers:{"Content-Type":"text/html","Access-Control-Allow-Origin":"*"}});
  }
 }
 
@@ -78,10 +80,11 @@ async function exceptFn(request,response){
  return response;
 }
 
-fetch.prototype ??= fetch;
-
-globalThis.newFetch = function newFetch(init){
-  return Object.assign(Object.create(fetch.prototype),init)
+fetch.prototype ??= (fetch.constructor = fetch);
+globalThis.newFetch = function newFetch(init) {
+  const fech = Object.assign(Object.create(fetch.prototype), init);
+  fech.constructor = fetch;
+  return fech;
 }
 
 globalThis.serializeHTTP = function serializeHTTP(re){
@@ -103,7 +106,7 @@ function zfetchWith(event,request=event.request){
  try{
    event.respondWith(zfetch(request.url,serializeHTTP(request)));
  }catch(e){
-   console.warn(e,event,request);
+   console.warn(e,...arguments);
  }
 }
 
@@ -111,7 +114,7 @@ function zrespondWith(event,response){
  try{
   return event.respondWith(response);
  }catch(e){
-  console.warn(e,event,response);
+  console.warn(e,...arguments);
   return e;
  }
 }
@@ -302,6 +305,7 @@ const loosest = {
               }
               return res;
             } catch (e) {
+              console.log(e,...arguments);
               return res;
             }
           }
@@ -329,6 +333,7 @@ const loosest = {
               }
               return await cascadeMatches(request);
             } catch (e) {
+              console.log(e,...arguments);
               return await cascadeMatches(request);
             }
           }
