@@ -14,12 +14,11 @@ const parseXML = (str) => parser.parseFromString(str, 'application/xhtml+xml');
 const serializer = new XMLSerializer();
 const serializeXML = (node) => serializer.serializeToString(node);
 
-function toXHTML(txt){
-  const doc = parseHTML(html);
-  const res = new Response(serializeXML(doc), {headers:{
+async function toXHTML(res){
+  const doc = parseHTML(await res.text());
+   return new Response(serializeXML(doc), {headers:{
     "Content-Type": "application/xhtml+xml",
   }});
-  return res;
 }
 
 const globalObject = q(()=>globalThis) ?? q(()=>self) ?? q(()=>ServiceWorkerGlobalScope);
@@ -326,6 +325,9 @@ const loosest = {
           const presponse = awaitUntil(event,offFirstFetch(request));
           const response = await presponse;
           if(response && (response instanceof Response)){
+            if(request.url.includes('content-type=xhtml'){
+              response = await toXHTML(response);
+            }
             return zrespondWith(event,response.clone());
           }else{
             console.log(response);
@@ -354,6 +356,9 @@ const loosest = {
           const presponse = awaitUntil(event,netFirstFetch(request));
           const response = await presponse;
           if(response && (response instanceof Response)){
+            if(request.url.includes('content-type=xhtml'){
+              response = await toXHTML(response);
+            }
             return zrespondWith(event,response.clone());
           }else{
             console.log(response);
