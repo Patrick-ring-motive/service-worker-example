@@ -8,6 +8,19 @@ q = (varFn) => {
     }
   }
 }
+const parser = new DOMParser();
+const parseHTML = (str) => parser.parseFromString(str, 'text/html');
+const parseXML = (str) => parser.parseFromString(str, 'application/xhtml+xml');
+const serializer = new XMLSerializer();
+const serializeXML = (node) => serializer.serializeToString(node);
+
+function toXHTML(txt){
+  const doc = parseHTML(html);
+  const res = new Response(serializeXML(doc), {headers:{
+    "Content-Type": "application/xhtml+xml",
+  }});
+  return res;
+}
 
 const globalObject = q(()=>globalThis) ?? q(()=>self) ?? q(()=>ServiceWorkerGlobalScope);
 globalObject.self = globalObject;
