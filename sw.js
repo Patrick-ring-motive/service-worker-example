@@ -19,17 +19,16 @@
     globalObject[x] = globalObject;
   }
   self.q = q;
-})();
 
 self.newQ = (...args) => {
    const fn = args?.shift?.();
    return fn && new fn(...args);
 };
 
-const parser = newQ(self.DOMParser)??(_=>_);
-const parseHTML = (str) => parser.parseFromString(str, 'text/html');
-const parseXML = (str) => parser.parseFromString(str, 'application/xhtml+xml');
-const serializer = newQ(self.XMLSerializer)??(_=>_);
+const parser = newQ(self?.DOMParser)??(_=>_);
+const parseHTML = (str) => parser?.parseFromString?.(str, 'text/html');
+const parseXML = (str) => parser?.parseFromString?.(str, 'application/xhtml+xml');
+const serializer = newQ(self.XMLSerializer);
 const serializeXML = (node) => serializer.serializeToString(node);
 
 async function toXHTML(res){
@@ -392,3 +391,4 @@ const loosest = {
     }
   });
 
+})();
