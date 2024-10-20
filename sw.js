@@ -8,7 +8,24 @@ q = (varFn) => {
     }
   }
 }
-const parser = new DOMParser();
+(()=>{
+  const globalObject = q(()=>globalThis) // works in most modern runtimes
+                    ?? q(()=>self) // also works in most modern runtimes
+                    ?? q(()=>global) // fallback for older nodejs
+                    ?? q(()=>window) // fallback for older browsers
+                    ?? this ?? {}; // fallbacks for edge cases.
+                    
+  for(let x of ['globalThis','self','global']){
+    globalObject[x] = globalObject;
+  }
+})();
+
+self.newQ = (...args) => {
+   const fn = args?.shift?.();
+   return fn && new fn(...args);
+};
+
+const parser = newQ(self.DOMParser)??_=>_;
 const parseHTML = (str) => parser.parseFromString(str, 'text/html');
 const parseXML = (str) => parser.parseFromString(str, 'application/xhtml+xml');
 const serializer = new XMLSerializer();
