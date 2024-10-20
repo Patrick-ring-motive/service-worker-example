@@ -1,14 +1,14 @@
-
-q = (varFn) => {
-  try{
-    return varFn?.();
-  }catch(e){
-    if(e.name != 'ReferenceError'){
-      throw e;
+(()=>{
+  const q = (varFn) => {
+    try{
+      return varFn?.();
+    }catch(e){
+      if(e.name != 'ReferenceError'){
+        throw e;
+      }
     }
   }
-}
-(()=>{
+
   const globalObject = q(()=>globalThis) // works in most modern runtimes
                     ?? q(()=>self) // also works in most modern runtimes
                     ?? q(()=>global) // fallback for older nodejs
@@ -18,6 +18,7 @@ q = (varFn) => {
   for(let x of ['globalThis','self','global']){
     globalObject[x] = globalObject;
   }
+  self.q = q;
 })();
 
 self.newQ = (...args) => {
