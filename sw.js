@@ -38,10 +38,6 @@ async function toXHTML(res){
   }});
 }
 
-const globalObject = q(()=>globalThis) ?? q(()=>self) ?? q(()=>ServiceWorkerGlobalScope);
-globalObject.self = globalObject;
-globalObject.globalThis = globalObject;
-
   globalThis.znewURL = function znewURL(){
     try{
         return new URL(...arguments);
