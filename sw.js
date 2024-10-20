@@ -325,7 +325,7 @@ const loosest = {
           const presponse = awaitUntil(event,offFirstFetch(request));
           const response = await presponse;
           if(response && (response instanceof Response)){
-            if(request.url.includes('content-type=xhtml'){
+            if(request.url.includes('content-type=xhtml')){
               response = await toXHTML(response);
             }
             return zrespondWith(event,response.clone());
@@ -356,7 +356,7 @@ const loosest = {
           const presponse = awaitUntil(event,netFirstFetch(request));
           const response = await presponse;
           if(response && (response instanceof Response)){
-            if(request.url.includes('content-type=xhtml'){
+            if(request.url.includes('content-type=xhtml')){
               response = await toXHTML(response);
             }
             return zrespondWith(event,response.clone());
