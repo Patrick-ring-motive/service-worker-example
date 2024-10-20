@@ -191,7 +191,7 @@ const loosest = {
   async function cacheResponse(req, res) {
     const copy = res.clone();
     globalThis.cache ??= (await caches.open('app'));
-    return cache.put(req, copy);
+    return cache.put(req.url??req, new Response(copy.body,copy);
   }
 
   const endings = [
