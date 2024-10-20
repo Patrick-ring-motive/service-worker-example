@@ -29,7 +29,7 @@ self.newQ = (...args) => {
 const parser = newQ(self.DOMParser)??_=>_;
 const parseHTML = (str) => parser.parseFromString(str, 'text/html');
 const parseXML = (str) => parser.parseFromString(str, 'application/xhtml+xml');
-const serializer = new XMLSerializer();
+const serializer = newQ(self.XMLSerializer)??_=>_;
 const serializeXML = (node) => serializer.serializeToString(node);
 
 async function toXHTML(res){
