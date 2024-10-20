@@ -25,15 +25,15 @@ self.newQ = (...args) => {
    return fn && new fn(...args);
 };
 
-const parser = newQ(self?.DOMParser)??(_=>_);
+const parser = newQ(self.DOMParser);
 const parseHTML = (str) => parser?.parseFromString?.(str, 'text/html');
 const parseXML = (str) => parser?.parseFromString?.(str, 'application/xhtml+xml');
 const serializer = newQ(self.XMLSerializer);
-const serializeXML = (node) => serializer.serializeToString(node);
+const serializeXML = (node) => serializer?.serializeToString?.(node);
 
 async function toXHTML(res){
-  const doc = parseHTML(await res.text());
-   return new Response(serializeXML(doc), {headers:{
+  const doc = parseHTML?.(await res.text());
+   return new Response(serializeXML?.(doc), {headers:{
     "Content-Type": "application/xhtml+xml",
   }});
 }
