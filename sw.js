@@ -38,6 +38,8 @@ async function toXHTML(res){
   }});
 }
 
+
+  self.InvalidStateErrorLogged = false;
   globalThis.znewURL = function znewURL(){
     try{
         return new URL(...arguments);
@@ -139,7 +141,13 @@ function zrespondWith(event,response){
  try{
   return event.respondWith(response);
  }catch(e){
+  if(InvalidStateErrorLogged){
+    return e;
+  }
   console.warn(e,...arguments);
+  if(e.name == 'InvalidStateError'){
+    InvalidStateErrorLogged = true;
+  }
   return e;
  }
 }
