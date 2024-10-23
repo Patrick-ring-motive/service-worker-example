@@ -84,10 +84,10 @@ async function zfetch(){
   if(response?.status == 403){
     response = await exceptFn(new Request(...arguments),response);
   }
-  return response;
+  return new Response(response.body,response);
  }catch(e){
    console.log(e,...arguments);
-   return new Response(e.message+'\n'+e.stack,{status:500,headers:{"Content-Type":"text/html","Access-Control-Allow-Origin":"*"}});
+   return new Response(e.message+'\n'+e.stack,{status:569,headers:{"Content-Type":"text/html","Access-Control-Allow-Origin":"*"}});
  }
 }
 
@@ -332,7 +332,7 @@ const loosest = {
               return res;
             }
             try {
-              res = await fetch(request); 
+              res = await zfetch(request); 
               if ((res)&&(res.status<300)) {
                 return await cacheResponse(request, res);
               }
