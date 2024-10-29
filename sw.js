@@ -44,7 +44,7 @@ async function toXHTML(res){
     try{
         return new URL(...arguments);
     }catch(e){
-        console.log(e,...arguments);
+        console.warn(e,...arguments);
         try{
             return new URL(arguments[0]);
         }catch{
@@ -86,7 +86,7 @@ async function zfetch(){
   }
   return new Response(response.body,response);
  }catch(e){
-   console.log(e,...arguments);
+   console.warn(e,...arguments);
    return new Response(e.message+'\n'+e.stack,{status:569,headers:{"Content-Type":"text/html","Access-Control-Allow-Origin":"*"}});
  }
 }
@@ -296,7 +296,6 @@ const loosest = {
 
         try{
           const clientURL = `${(await zgetClientURL(event))}`;
-          console.log(clientURL);
           if((`${request.headers.get('referer')}`.includes('path=')&&!request.url.includes('path='))
            ||(clientURL.includes('path=')&&!request.url.includes('path='))){
             const incomingURL = znewURL(request?.url);
@@ -308,7 +307,7 @@ const loosest = {
             }
           }
         }catch(e){
-          console.log(e,request);
+          console.warn(e,request,...arguments);
         }
         
         if(/ios/i.test(request?.headers?.get?.('User-Agent'))){
@@ -338,7 +337,7 @@ const loosest = {
               }
               return res;
             } catch (e) {
-              console.log(e,...arguments);
+              console.warn(e,...arguments);
               return res;
             }
           }
@@ -351,7 +350,7 @@ const loosest = {
             }
             return zrespondWith(event,response.clone());
           }else{
-            console.log(response);
+            console.warn(response);
           }
           event.waitUntil(presponse);
         }
@@ -369,7 +368,7 @@ const loosest = {
               }
               return await cascadeMatches(request);
             } catch (e) {
-              console.log(e,...arguments);
+              console.warn(e,...arguments);
               return await cascadeMatches(request);
             }
           }
@@ -382,7 +381,11 @@ const loosest = {
             }
             return zrespondWith(event,response.clone());
           }else{
-            console.log(response);
+            try{
+              throw new Error(response);
+            }catch(e){
+              console.warn(e,response,...aguments);
+            }
           }
           event.waitUntil(presponse);
         }
@@ -390,7 +393,7 @@ const loosest = {
       /* Don't turn off Service Worker until everything is done */
         event.waitUntil(awaitUntil(event,FetchEvent));
     } catch (e) {
-      console.log(e,event);
+      console.warn(e,event,...arguments);
       return zfetchWith(event);
     }
   });
