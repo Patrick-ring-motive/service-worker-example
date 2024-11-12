@@ -1,3 +1,10 @@
+async function importJSDOM(){
+  return globalThis.jsdom ?? (await(await import('https://cdn.jsdelivr.net/npm/jsdom-bundle@1.0.6/bundles/gzimport.js')).jsdomImport);
+}
+void async function(){
+  await importJSDOM();
+}();
+
 (()=>{
   const q = (varFn) => {
     try{
@@ -25,13 +32,18 @@ self.newQ = (...args) => {
    return fn && new fn(...args);
 };
 
-const parser = newQ(self.DOMParser);
-const parseHTML = (str) => parser?.parseFromString?.(str, 'text/html');
-const parseXML = (str) => parser?.parseFromString?.(str, 'application/xhtml+xml');
-const serializer = newQ(self.XMLSerializer);
-const serializeXML = (node) => serializer?.serializeToString?.(node);
+
 
 async function toXHTML(res){
+  self.jsdom ?? (await(await import('https://cdn.jsdelivr.net/npm/jsdom-bundle@1.0.6/bundles/gzimport.js')).jsdomImport);
+  self.JSDOM ??= self.jsdom.JSDOM;
+  self.DOM ??= new JSDOM();
+  self.win ??=DOM.window;
+  self.parser ??= newQ(win.DOMParser);
+  self.parseHTML ??= (str) => parser?.parseFromString?.(str, 'text/html');
+  self.parseXML ??= (str) => parser?.parseFromString?.(str, 'application/xhtml+xml');
+  self.serializer ??= newQ(win.XMLSerializer);
+  self.serializeXML ??= (node) => serializer?.serializeToString?.(node);
   const doc = parseHTML?.(await res.text());
    return new Response(serializeXML?.(doc), {headers:{
     "Content-Type": "application/xhtml+xml",
