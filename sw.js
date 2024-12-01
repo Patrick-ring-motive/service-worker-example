@@ -35,7 +35,7 @@ self.newQ = (...args) => {
 
 
 async function toXHTML(res){
-  self.jsdom ?? (await(await import('https://cdn.jsdelivr.net/npm/jsdom-bundle@1.0.6/bundles/gzimport.js')).jsdomImport);
+  self.jsdom ?? await importJSDOM();
   self.JSDOM ??= self.jsdom.JSDOM;
   self.DOM ??= new JSDOM();
   self.win ??=DOM.window;
